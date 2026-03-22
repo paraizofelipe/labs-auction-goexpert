@@ -57,6 +57,11 @@ AUCTION_INTERVAL=30s   # leilão fecha em 30 segundos
 go test ./internal/infra/database/auction/... -v -timeout 60s
 ```
 
+# Para pular testes que precisam de Docker:
+```bash
+go test ./... -short
+```
+
 ## Funcionamento do fechamento automático
 
 Ao criar um leilão, uma goroutine é agendada via `time.AfterFunc`. Quando `AUCTION_INTERVAL` expira, ela atualiza o status do leilão para `Completed` no MongoDB. Lances em leilões fechados ou expirados são automaticamente rejeitados.
