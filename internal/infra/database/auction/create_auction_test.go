@@ -13,9 +13,13 @@ import (
 )
 
 func TestCreateAuction_AutoClose(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test: requires Docker")
+	}
+
 	ctx := context.Background()
 
-	mongoContainer, err := mongodb.Run(ctx, "mongo:latest")
+	mongoContainer, err := mongodb.Run(ctx, "mongo:7")
 	if err != nil {
 		t.Fatalf("falha ao iniciar container mongodb: %s", err)
 	}
@@ -38,6 +42,7 @@ func TestCreateAuction_AutoClose(t *testing.T) {
 
 	database := client.Database("auctions_test")
 
+	// Must be called BEFORE NewAuctionRepository because getAuctionInterval() reads the env var at construction time.
 	os.Setenv("AUCTION_INTERVAL", "2s")
 	defer os.Unsetenv("AUCTION_INTERVAL")
 
