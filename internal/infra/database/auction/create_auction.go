@@ -67,7 +67,7 @@ func (ar *AuctionRepository) CreateAuction(
 		closeCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
-		filter := bson.M{"_id": auctionEntity.Id}
+		filter := bson.M{"_id": auctionEntity.Id, "status": auction_entity.Active}
 		update := bson.M{"$set": bson.M{"status": auction_entity.Completed}}
 
 		if _, err := ar.Collection.UpdateOne(closeCtx, filter, update); err != nil {
